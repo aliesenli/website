@@ -22,6 +22,7 @@ url: https://aliesenli.com
 permalink: /:title/
 
 # To enable google analytics, supply your token below
+analytics-google: 'G-01C8BV4S7R'
 # analytics-google: 'UA-MYANALYTICS'
 
 # To enable piwik tracking, supply your url & site ID below
