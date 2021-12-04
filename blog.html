@@ -10,9 +10,13 @@ pagination:
 	{% if site.posts.size == 0 %}
 		<p class="text-center">Nothing published yet!</p>
 	{% elsif site.pagination.enabled %}
+	<p class="text-center">Nothing published yet1</p>
 		{% for post in paginator.posts %}
+		<p class="text-center">Nothing published yet2</p>
 			{% if post.category == 'blog' %}
+			<p class="text-center">Nothing published yet3</p>
 				{% if post.hidden != true %}
+				<p class="text-center">Nothing published yet4</p>
 					{% include blog-post.html %}
 				{% endif %}
 			{% endif %}
