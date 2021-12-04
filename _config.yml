@@ -34,7 +34,7 @@ disqus:
   shortname: mydisqus # enter this from your disqus account
   #categories: [blog, project] # only show disqus for posts that have these categories
   categories: []
-  
+
 # if you don't have any of social below, comment the line
 # facebook: myfacebook
 # twitter: mytwitter
@@ -69,7 +69,7 @@ width: large
 
 # if you do/don't need pagination, toggle 'enabled' between true/false below
 pagination:
-  enabled: true
+  enabled: false
   sort_reverse: true # display recent posts first
   title: ":title" # Changing this will mess up the header display logic
   per_page: 5
