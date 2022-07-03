@@ -1,6 +1,6 @@
 # main text of home
 name: Ali Riza Esenli
-bio: I'm a software developer in Switzerland with a passion for computer science.
+bio: I'm a software developer from Switzerland with a passion for computer science.
 
 # twitter summary info
 description: Personal website
@@ -117,6 +117,7 @@ plugins:
     - jemoji
     - jekyll-admin
     - jekyll-paginate-v2
+    - jekyll-sitemap
 
 jekyll-mentions:
     base_url: https://github.com
