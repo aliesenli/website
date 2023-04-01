@@ -1,6 +1,6 @@
 # main text of home
 name: Ali Riza Esenli
-bio: I'm a software developer from Switzerland with a passion for computer science.
+bio: I am a software developer based in Switzerland with a deep passion for computer science. My expertise lies in designing and developing cutting-edge software solutions.
 
 # twitter summary info
 description: Personal website
@@ -89,7 +89,7 @@ read-time: false
 show-tags: true
 
 # related posts inside a post?
-related: true
+related: false
 
 # Display links for next and previous posts for the specified categories
 post-advance-links: [blog]
