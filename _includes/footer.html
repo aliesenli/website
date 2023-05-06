@@ -1,4 +1,4 @@
-<footer class="footer-main">
+<footer class="footer-main {% if site.animation %}animated{% endif %}">
     {{ site.name }} © {{ site.time | date: '%Y' }}
 
     <a class="link" rel="noopener" aria-label="RSS-Feed" href="{{ site.url }}/feed.xml" target="_blank">
