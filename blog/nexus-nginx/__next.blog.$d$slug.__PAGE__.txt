@@ -1,0 +1,109 @@
+1:"$Sreact.fragment"
+2:I[22016,["/_next/static/chunks/13h-0fd.p-1ga.js","/_next/static/chunks/0d3shmwh5_nmn.js"],""]
+5:I[97367,["/_next/static/chunks/13h-0fd.p-1ga.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"OutletBoundary"]
+6:"$Sreact.suspense"
+3:T1251,<p><img src="/assets/nexus-nginx-banner.png" alt="Nexus Nginx Banner"></p>
+<p>In this blog post, I'll guide you through the process, how to run the Nexus Repository Manager on a Server. For security purposes, I'll host Nexus behind an Nginx Reverse Proxy.</p>
+<h2>Installing Nexus Repository Manager</h2>
+<p>You could download the latest version of Nexus Repository Manager from the official website. Instead of doing that manually, we will use the official Nexus3 docker image.</p>
+<h2>Setting up Hosting machine</h2>
+<p>In order to run the Application on my Subdomain I'll host it on a Hetzner CX31 shared Server with 8GB RAM and 2-Core VCPU. According to System Requirements its recommended to have at least 4GB of physical RAM.</p>
+<p>For production you'll probably need to increase the physical RAM and allocated Application space depending on the team size and amount of hosted packages.</p>
+<h2>Configuring Nginx Reverse Proxy with SSL Certificate</h2>
+<p>SSH into your machine and use Certbot to create an SSL certificate for your domain/subdomain. First, install Certbot by running the following command:</p>
+<pre><code class="language-bash">sudo apt-get update
+sudo apt-get install certbot python3-certbot-nginx
+</code></pre>
+<p>Then, run the following command to obtain a new SSL certificate for your domain/subdomain:</p>
+<pre><code class="language-bash">sudo certbot --nginx -d {your.subdomain.com}
+</code></pre>
+<p>The SSL certificate is stored in the directory <code>/etc/letsencrypt/live/{your.domain.com}/</code>. Within this directory, you will find several files including:</p>
+<ul>
+<li>cert.pem — the SSL certificate for your domain</li>
+<li>chain.pem — the intermediate certificate provided by the Certificate Authority (CA)</li>
+<li>fullchain.pem — the SSL certificate and intermediate certificate concatenated together</li>
+<li>privkey.pem — the private key for your SSL certificate</li>
+</ul>
+<p>Once the SSL certificate is installed and the Nginx configuration is updated, your domain/subdomain should be accessible over HTTPS with a valid SSL certificate.</p>
+<p>Next, we need to configure Nginx as a reverse proxy for Nexus Repository Manager. To do this, we need to create an Nginx configuration file.</p>
+<p>We are listening to Port 80 HTTP and 443 HTTPS. The incoming requests will automatically be forwarded to HTTPS.</p>
+<p><em>nginx.conf</em></p>
+<pre><code class="language-nginx">http {
+
+  server {
+    listen 80;
+    server_name nexus.aliesenli.com;
+    return 301 https://nexus.aliesenli.com$request_uri;
+  }
+
+  server {
+    listen 443 ssl;
+    server_name nexus.aliesenli.com;
+
+    ssl_certificate /etc/nginx/certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/privkey.pem;
+
+    access_log /var/log/nginx/data-access.log combined;
+
+    location / {
+      proxy_pass http://nexus:8081/;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_redirect http://nexus:8081/ $scheme://$http_host/;
+      proxy_http_version 1.1;
+      proxy_send_timeout 150;
+      proxy_read_timeout 320;
+    }
+  }
+}
+</code></pre>
+<p>Verify Nginx syntax:</p>
+<pre><code class="language-bash">nginx -t
+</code></pre>
+<p>Expected output:</p>
+<pre><code>nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+</code></pre>
+<h2>Setting up Docker Compose</h2>
+<p><em>docker-compose.yaml</em></p>
+<pre><code class="language-yaml">version: '1.0'
+
+services:
+  nexus:
+    image: sonatype/nexus3:3.50.0
+    container_name: nexus
+    restart: always
+    ports:
+      - 8081:8081
+    volumes:
+      - ./nexus-data:/nexus-data
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./certs:/etc/nginx/certs
+    depends_on:
+      - nexus
+</code></pre>
+<h2>Running the Application</h2>
+<p>To run the application, use <code>docker-compose up -d</code> in the terminal. Verify containers are running with <code>docker ps</code>.</p>
+<p>Finally, visit your domain or subdomain and start using Nexus as a private package manager! It supports:</p>
+<ul>
+<li>Java packages: Maven, Ivy, and Gradle</li>
+<li>.NET packages: NuGet, .NET Core, and Chocolatey</li>
+<li>JavaScript packages: npm, Bower, and Yarn</li>
+<li>Docker images: Docker (hosted Docker registries)</li>
+<li>Python packages: PyPI</li>
+<li>Ruby packages: RubyGems</li>
+</ul>
+<p><img src="/assets/nexus-repository-manager.png" alt="Nexus Repository Manager"></p>
+0:{"rsc":["$","$1","c",{"children":[["$","article",null,{"className":"py-8 sm:py-10 max-w-2xl","children":[["$","$L2",null,{"href":"/blog","className":"inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent transition-colors mb-8 sm:mb-10","children":"← Blog"}],["$","header",null,{"className":"mb-8 sm:mb-10","children":[["$","div",null,{"className":"flex flex-wrap gap-2 mb-4","children":[["$","$L2","DevOps",{"href":"/tags#devops","className":"inline-block px-2.5 py-0.5 text-xs rounded-md font-medium transition-all duration-150","style":{"background":"rgba(59,130,246,0.1)","border":"1px solid rgba(59,130,246,0.2)","color":"#93c5fd"},"children":"DevOps"}],["$","$L2","Nexus",{"href":"/tags#nexus","className":"inline-block px-2.5 py-0.5 text-xs rounded-md font-medium transition-all duration-150","style":{"background":"rgba(59,130,246,0.1)","border":"1px solid rgba(59,130,246,0.2)","color":"#93c5fd"},"children":"Nexus"}],["$","$L2","Nginx",{"href":"/tags#nginx","className":"inline-block px-2.5 py-0.5 text-xs rounded-md font-medium transition-all duration-150","style":{"background":"rgba(59,130,246,0.1)","border":"1px solid rgba(59,130,246,0.2)","color":"#93c5fd"},"children":"Nginx"}],["$","$L2","Docker",{"href":"/tags#docker","className":"inline-block px-2.5 py-0.5 text-xs rounded-md font-medium transition-all duration-150","style":{"background":"rgba(59,130,246,0.1)","border":"1px solid rgba(59,130,246,0.2)","color":"#93c5fd"},"children":"Docker"}],["$","$L2","NPM",{"href":"/tags#npm","className":"inline-block px-2.5 py-0.5 text-xs rounded-md font-medium transition-all duration-150","style":{"background":"rgba(59,130,246,0.1)","border":"1px solid rgba(59,130,246,0.2)","color":"#93c5fd"},"children":"NPM"}],["$","$L2","Hetzner",{"href":"/tags#hetzner","className":"inline-block px-2.5 py-0.5 text-xs rounded-md font-medium transition-all duration-150","style":{"background":"rgba(59,130,246,0.1)","border":"1px solid rgba(59,130,246,0.2)","color":"#93c5fd"},"children":"Hetzner"}],["$","$L2","Private Registry",{"href":"/tags#private registry","className":"inline-block px-2.5 py-0.5 text-xs rounded-md font-medium transition-all duration-150","style":{"background":"rgba(59,130,246,0.1)","border":"1px solid rgba(59,130,246,0.2)","color":"#93c5fd"},"children":"Private Registry"}]]}],["$","h1",null,{"className":"text-2xl sm:text-3xl font-bold tracking-tight text-text-primary leading-snug mb-3","children":"Running Nexus Repository Manager Behind an Nginx Reverse Proxy"}],["$","p",null,{"className":"text-text-muted text-sm","children":"2023-04-01"}]]}],["$","div",null,{"className":"h-px mb-8 sm:mb-10","style":{"background":"linear-gradient(90deg, rgba(59,130,246,0.4), transparent)"}}],["$","div",null,{"className":"prose","dangerouslySetInnerHTML":{"__html":"$3"}}]]}],null,"$L4"]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"w5LzZ7UhdbxHJEh3F_gJq"}
+4:["$","$L5",null,{"children":["$","$6",null,{"name":"Next.MetadataOutlet","children":"$@7"}]}]
+7:null
