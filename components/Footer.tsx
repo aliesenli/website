@@ -13,7 +13,7 @@ export default function Footer() {
           rel="noopener noreferrer"
           className="text-sm text-text-muted hover:text-accent transition-colors duration-200"
         >
-          GitHub ↗
+          GitHub
         </a>
       </div>
     </footer>
