@@ -38,7 +38,7 @@ export default function Nav() {
             rel="noopener noreferrer"
             className="hidden sm:inline-flex text-xs px-3 py-1.5 rounded-md border border-border text-text-muted hover:border-accent hover:text-accent transition-all duration-200"
           >
-            GitHub ↗
+            GitHub
           </a>
         </div>
       </div>

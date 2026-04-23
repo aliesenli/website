@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description: siteConfig.bio,
     url: siteConfig.url,
   },
-  icons: { icon: '/favicon.svg' },
+  icons: { icon: [{ url: '/favicon.ico' }, { url: '/favicon.svg', type: 'image/svg+xml' }] },
   robots: {
     index: true,
     follow: true,
