@@ -17,7 +17,18 @@ export async function generateMetadata({ params }: Props) {
   const posts = getAllPosts()
   const post = posts.find((p) => p.slug === slug)
   if (!post) return {}
-  return { title: post.title, description: post.description }
+  return {
+    title: post.title,
+    description: post.description,
+    alternates: { canonical: `/blog/${slug}` },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: 'article',
+      publishedTime: post.date,
+      tags: post.tags,
+    },
+  }
 }
 
 export default async function PostPage({ params }: Props) {
