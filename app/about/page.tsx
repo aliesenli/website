@@ -1,11 +1,13 @@
 export default function AboutPage() {
   const skills = [
-    { name: 'C#, ASP.NET Core', icon: '⚙️' },
-    { name: 'TypeScript & JavaScript', icon: '🟦' },
-    { name: 'HTML & CSS', icon: '🎨' },
-    { name: 'MsSQL', icon: '🗄️' },
-    { name: 'Git', icon: '🔀' },
-    { name: 'Docker', icon: '🐳' },
+    'C#, ASP.NET Core',
+    'TypeScript & JavaScript',
+    'React',
+    'Angular',
+    'HTML & CSS',
+    'PostgreSQL',
+    'Git',
+    'Docker',
   ]
 
   return (
@@ -29,15 +31,14 @@ export default function AboutPage() {
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         {skills.map((skill) => (
           <li
-            key={skill.name}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-text-subtle"
+            key={skill}
+            className="px-4 py-3 rounded-xl text-sm text-text-subtle"
             style={{
               background: 'rgba(13,21,38,0.8)',
               border: '1px solid rgba(26,45,80,0.8)',
             }}
           >
-            <span>{skill.icon}</span>
-            {skill.name}
+            {skill}
           </li>
         ))}
       </ul>
