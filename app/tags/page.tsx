@@ -1,5 +1,11 @@
+import type { Metadata } from 'next'
 import { getAllTags } from '@/lib/posts'
 import PostCard from '@/components/PostCard'
+
+export const metadata: Metadata = {
+  title: 'Tags',
+  alternates: { canonical: '/tags' },
+}
 
 export default function TagsPage() {
   const tagMap = getAllTags()
